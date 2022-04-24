@@ -414,12 +414,14 @@ void MechCalls::SlopeCorrect(int SurfaceSpread)
 {
 	// calls slope correction for spread rate
 	double RosReduct = 1.0; 		// spread rate reduction only for surface fire
-
+	int angle = 1;
+	
 	if (SurfaceSpread)  			// if surface fire spread, subst. midx,y for x,ypts
 	{
 		midx = xpt;				// not for crownfire spread
 		midy = ypt;
-		RosReduct = pFarsite->GetRosRed(ld.fuel);
+		// TODO: compute angle
+		RosReduct = pFarsite->GetRosRed(ld.fuel, angle);
 	}
 
 	ActualSurfaceSpread = pow2(xt) + pow2(yt);

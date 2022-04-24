@@ -122,6 +122,8 @@ const size_t headsize = 7316;
 #define SIMREQ_RESUMESUSPEND 		3
 #define SIMREQ_RESET				4
 
+#define ROSRED_ANGLE_MAX            16
+
 //----------------------------------------------------------
 //
 //   Burn Period functions
@@ -687,7 +689,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	void SetPerimRes(double input);
 	bool AccelerationON();
 	void SetAccelerationON(bool State);
-	double GetRosRed(int fuel);
+	double GetRosRed(int fuel, int angle);
 	void SetRosRed(int fuel, int angle, double rosred);
 	void InitializeRosRed();
 	double GetActualTimeStep();
@@ -816,7 +818,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	double** perimeter1;// = 0; 		   		// pointers to arrays with perimeter points
 	double* perimeter2;// = 0;					// swap array
 
-	double redros[257];  					// rate of spread reduction factors
+	double redros[257][ROSRED_ANGLE_MAX];  					// rate of spread reduction factors
 	size_t nmemb;
 	double PercentageOfEmberIgnitions;// = 5.0;  	// % embers that start fires
 	double SpotIgnitionDelay;// = 0.0;			// delay (minutes) for ignition of spot fires

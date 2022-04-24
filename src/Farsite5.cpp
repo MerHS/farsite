@@ -1095,21 +1095,21 @@ void Farsite5::SetAccelerationON(bool State)
 void Farsite5::InitializeRosRed()
 {
 	for (long i = 0; i < 257; i++)
-		redros[i] = 1.0;
+		redros[i][ROSRED_ANGLE_MAX] = 1.0;
 }
 
 
-double Farsite5::GetRosRed(int fuel)
+double Farsite5::GetRosRed(int fuel, int angle)
 {
-	if (redros[fuel] > 0.0)
-		return redros[fuel];
+	if (redros[fuel][angle] > 0.0)
+		return redros[fuel][angle];
 	else
 		return 1.0;
 }
 
 void Farsite5::SetRosRed(int fuel, int angle, double rosred)
 {
-	redros[fuel] = fabs(rosred);
+	redros[fuel][angle] = fabs(rosred);
 }
 
 long Farsite5::GetInout(long FireNumber)
