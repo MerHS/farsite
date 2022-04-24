@@ -18,6 +18,7 @@ public:
 	int SetLandscapeFile(char *_lcpFileName);
 	int SetIgnition(char *shapeFileName);
 	int SetBarriers(char *shapeFileName);
+	int SetFuels(char *fuelFileName);
 	int SetNumProcessors(int numThreads = 1);
 	int SetStartProcessor(int _procNum);
 	int GetStartProcessor();

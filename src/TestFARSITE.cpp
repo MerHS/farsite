@@ -75,7 +75,7 @@ unsigned int __stdcall RunFarsiteProc(void *_pFarsite)
 #include <stdlib.h>
 
 #endif
-bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *barrierPath, char *outPath, int *outType)
+bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *barrierPath, char *fuelPath, char *outPath, int *outType)
 {
 	strcpy(lcp, "");
 	strcpy(inputs, "");
@@ -100,6 +100,11 @@ bool ParseCommands(char *in, char *lcp, char *inputs, char *ignitPath, char *bar
 	p = strtok(NULL, seps);
 	if(p)
 		strcpy(barrierPath, p);
+	else
+		return false;
+	p = strtok(NULL, seps);
+	if(p)
+		strcpy(fuelPath, p);
 	else
 		return false;
 	p = strtok(NULL, seps);
@@ -840,7 +845,7 @@ int openMPMain(int argc, char* argv[])
 #define MAX_PATH 1512
 int linuxMain(int argc, char* argv[])
 {
-    char lcpFileName[1512], inputsFileName[1512], ignitName[1512], barrierName[1512], baseOutputsPath[1512];
+    char lcpFileName[1512], inputsFileName[1512], ignitName[1512], barrierName[1512], fuelName[1512], baseOutputsPath[1512];
 	if(argc < 2)
 	{
 		printf("TestFARSITE expects one parameter\nTestFARSITE Usage:\n"
@@ -848,11 +853,12 @@ int linuxMain(int argc, char* argv[])
 			"Where:\n\t[commandfile] is the path to the command file.\n");
 		printf("The command file contains command lines for multiple Farsite runs, each run's command on a seperate line.\n");
 		printf("Each command expects six parameters, all required\n"
-			"[LCPName] [InputsFileName] [IgnitionFileName] [BarrierFileName] [outputDirPath] [outputsType]\n"
+			"[LCPName] [InputsFileName] [IgnitionFileName] [BarrierFileName] [FuelFileName] [outputDirPath] [outputsType]\n"
 			"Where:\n\t[LCPName] is the path to the Landscape File\n"
 			"\t[InputsFileName] is the path to the FARSITE Inputs File (ASCII Format)\n"
 			"\t[IgnitionFileName] is the path to the Ignition shape File\n"
 			"\t[BarrierFileName] is the path to the Barrier shape File (0 if no barrier)\n"
+			"\t[FuelFileName] is the path to the Fuel adjustment File (0 if no fuel)\n"
 			"\t[outputDirPath] is the path to the output files base name (no extension)\n"
 			"\t[outputsType] is the file type for outputs (0 = both, 1 = ASCII grid, 2 = FlamMap binary grid\n\n");
 		exit(1);
@@ -871,7 +877,7 @@ int linuxMain(int argc, char* argv[])
 	{
         fgets(buf, 1512, cmd);
 
-		if(ParseCommands(buf, lcpFileName, inputsFileName, ignitName, barrierName, baseOutputsPath, &outType))//assume valid commands
+		if(ParseCommands(buf, lcpFileName, inputsFileName, ignitName, barrierName, fuelName, baseOutputsPath, &outType))//assume valid commands
 			nFarsites++;
 	}
 	rewind(cmd);
@@ -884,6 +890,7 @@ int linuxMain(int argc, char* argv[])
 	char **inputs = new char *[nFarsites];
 	char **ignits = new char *[nFarsites];
 	char **barriers = new char *[nFarsites];
+	char **fuels = new char *[nFarsites];
 	char **outs = new char *[nFarsites];
 	int *outTypes = new int[nFarsites];
 	CFarsite **pFarsites = new CFarsite*[nFarsites];
@@ -895,14 +902,16 @@ int linuxMain(int argc, char* argv[])
 		inputs[i] = new char[MAX_PATH];
 		ignits[i] = new char[MAX_PATH];
 		barriers[i] = new char[MAX_PATH];
+		fuels[i] = new char[MAX_PATH];
 		outs[i] = new char[MAX_PATH];
 		strcpy(lcps[i], "");
 		strcpy(inputs[i], "");
 		strcpy(ignits[i], "");
 		strcpy(barriers[i], "");
+		strcpy(fuels[i], "");
 		strcpy(outs[i], "");
         fgets(buf, 1512, cmd);
-		if(!ParseCommands(buf, lcps[i], inputs[i], ignits[i], barriers[i], outs[i], &outTypes[i]))
+		if(!ParseCommands(buf, lcps[i], inputs[i], ignits[i], barriers[i], fuels[i], outs[i], &outTypes[i]))
 			continue;
 	}
 
@@ -926,6 +935,10 @@ int linuxMain(int argc, char* argv[])
 				pFarsites[f] = NULL;
 				//_getch();
 				continue;
+			}
+			if(strlen(fuels[f]) > 2) {
+				printf("Loading fuel adjustment file for Farsite #%d: %s\n", f + 1, fuels[f]);
+				pFarsites[f]->SetFuels(fuels[f]);
 			}
 		}
 		if(!cancelRequest)
@@ -1160,12 +1173,14 @@ int linuxMain(int argc, char* argv[])
 		delete[] outs[i];
 		delete[] ignits[i];
 		delete[] barriers[i];
+		delete[] fuels[i];
 	}
 	delete[] lcps;
 	delete[] inputs;
 	delete[] outs;
 	delete[] ignits;
 	delete[] barriers;
+	delete[] fuels;
 	delete[] outTypes;
 	return 0;
 }

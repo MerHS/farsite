@@ -688,7 +688,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	bool AccelerationON();
 	void SetAccelerationON(bool State);
 	double GetRosRed(int fuel);
-	void SetRosRed(int fuel, double rosred);
+	void SetRosRed(int fuel, int angle, double rosred);
 	void InitializeRosRed();
 	double GetActualTimeStep();
 	double GetVisibleTimeStep();
@@ -1238,6 +1238,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 
 	int SetIgnitionFileName(char *_ignitionFileName);
 	int SetBarrierFileName(char *_barrierFileName);
+	int SetFuelFileName(char *_fuelFileName);
 	int SetBarrier(char *_barrierFileName);
 
 	long IgnitionReset;// = 0;

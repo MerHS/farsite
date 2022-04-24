@@ -1107,7 +1107,7 @@ double Farsite5::GetRosRed(int fuel)
 		return 1.0;
 }
 
-void Farsite5::SetRosRed(int fuel, double rosred)
+void Farsite5::SetRosRed(int fuel, int angle, double rosred)
 {
 	redros[fuel] = fabs(rosred);
 }
@@ -2793,15 +2793,17 @@ int Farsite5::LoadROSAdjustFile()
 			return ret;
 		}
 		long fnum;
+		long fangle;
 		double adj;
 
 		do
-		{	int nRead;
-			nRead = fscanf(in, "%ld %lf", &fnum, &adj);
-			if(nRead == 2)
+		{	
+			int nRead;
+			nRead = fscanf(in, "%ld %ld %lf", &fnum, &fangle, &adj);
+			if(nRead == 3)
 			{
-				if(fnum>=0 && fnum<257 && adj >= 0)
-					SetRosRed(fnum, adj);
+				if(fnum >= 0 && fnum < 257 && adj >= 0)
+				SetRosRed(fnum, fangle, adj);
 			}
 		}while(!feof(in));
 
@@ -10292,8 +10294,11 @@ void Farsite5::FlatSimulateInitiateTerminate()
 int Farsite5::LaunchFarsite(void)
 {
 int i_Ret;
-	if(!Ignition.GetLightsLandscape())
+	if(!Ignition.GetLightsLandscape()) {
+		std::cout << "what??" << std::endl;
 		return e_EMS_FARSITE_NO_IGNITION;
+	}
+		
    Ignition.ShapeInput();
    if(strlen(icf.cr_FarsiteBarrier) > 0)
    {
@@ -10456,12 +10461,20 @@ int Farsite5::SetIgnitionFileName(char *_ignitionFileName)
 {
 	strcpy(icf.cr_FarsiteIgnition, _ignitionFileName);
 	strcpy(Ignition.ifile, icf.cr_FarsiteIgnition);
+	std::cout << "create!" << std::endl;
 	return CreateIgnitionGrid();
 }
 
 int Farsite5::SetBarrierFileName(char *_barrierFileName)
 {
 	strcpy(icf.cr_FarsiteBarrier, _barrierFileName);
+
+	return 1;
+}
+
+int Farsite5::SetFuelFileName(char *_fuelFileName)
+{
+	strcpy(icf.cr_ROSAdjustFile, _fuelFileName);
 
 	return 1;
 }
@@ -10725,6 +10738,9 @@ int Farsite5::CreateIgnitionGrid()
 	ignitionRows = Header.numnorth;
 	ignitionCols = Header.numeast;
 	ignitionGrid = new float*[ignitionRows];
+
+	std::cout << ignitionRows << " " << ignitionCols << std::endl;
+
 	for(long r = 0; r < ignitionRows; r++)
 	{
 		ignitionGrid[r] = new float[ignitionCols];
@@ -10760,6 +10776,7 @@ int Farsite5::CreateIgnitionGrid()
 			return FALSE;
 		}
 		SHPGetInfo( hSHP, &nShapes, &shapeType, adfMinBound, adfMaxBound );
+		std::cout << Ignition.ifile << " -- " << nShapes << std::endl;
 		NumAlloc=0;
 		for(int s = 0; s < nShapes; s++ )
 		{
@@ -10824,6 +10841,9 @@ int Farsite5::CreateIgnitionGrid()
 							//MTT_RotateVectorPoint(&x, &y, true);
 							cellx=(long) ((x-west)/res);     // zero based
 							celly=(long) ((north-y)/res);//-1;
+
+							std::cout << i << "(" << x <<"," << y <<"), (" << cellx << "," << celly <<") - " << res << std::endl;
+							std::cout << NumCols << "," << NumRows << std::endl;
 							//celly=(long) ((north-y)/res)-1;
 							if(cellx<0 || cellx>NumCols-1)
 								continue;
@@ -10833,7 +10853,7 @@ int Farsite5::CreateIgnitionGrid()
 							//{
 							igCell = CellData(x, y, igCell, igCrown, igGround, &garbage);
 								//float fuel = igCell.f;// NumRows - celly - 1);
-
+							
 							if(ignitionGrid[celly][cellx] != 1.0 && igCell.f > 0 && (igCell.f < 90 || igCell.f > 99))
 								ignitionGrid[celly][cellx] = 1.0;//.Time[0]=nodeSpread->GetStartTime();
 							//}
@@ -10866,6 +10886,7 @@ int Farsite5::CreateIgnitionGrid()
 				if(ignitionGrid[r][c] > 0.0)
 				{
 					m_nCellsLit++;
+					std::cout << "ignite!" << std::endl;
 					Ignition.SetLightsLandscape(true);
 				}
 			}

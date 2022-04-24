@@ -1,0 +1,18 @@
+Loading lcp file for Farsite #1: /home/kinetc/work/farsite/Creek/input/Landscape_1.lcp
+Loading fuel adjustment file for Farsite #1: /home/kinetc/work/farsite/Creek/input/13Adj_5.adj
+Loading inputs file for Farsite #1: /home/kinetc/work/farsite/Creek/input/Creek_input.input
+Loading ignition file for Farsite #1: /home/kinetc/work/farsite/Creek/input/Start_shape_real.shp
+create!
+2963 2340
+/home/kinetc/work/farsite/Creek/input/Start_shape_real.shp -- 1
+1(-119.27,37.2095), (68730,62430) - 30
+2340,2963
+2(-119.27,37.2093), (68730,62430) - 30
+2340,2963
+3(-119.27,37.2092), (68730,62430) - 30
+2340,2963
+4(-119.27,37.2095), (68730,62430) - 30
+2340,2963
+Launching Farsite #1
+what??
+No ignition

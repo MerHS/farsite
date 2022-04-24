@@ -45,6 +45,15 @@ int CFarsite::SetBarriers(char *shapeFileName)
 	return 0;
 }
 
+int CFarsite::SetFuels(char *fuelFileName)
+{
+	if(m_pFarsite)
+	{
+		return m_pFarsite->SetBarrierFileName(fuelFileName);
+	}
+	return 0;
+}
+
 int CFarsite::SetNumProcessors(int numThreads)
 {
 	return 0;
