@@ -49,7 +49,7 @@ int CFarsite::SetFuels(char *fuelFileName)
 {
 	if(m_pFarsite)
 	{
-		return m_pFarsite->SetBarrierFileName(fuelFileName);
+		return m_pFarsite->SetFuelFileName(fuelFileName);
 	}
 	return 0;
 }
@@ -71,8 +71,13 @@ int CFarsite::GetStartProcessor()
 
 int CFarsite::LoadFarsiteInputs(char *_inputFile)
 {
+	LoadFarsiteInputs(_inputFile, nullptr);
+}
+
+int CFarsite::LoadFarsiteInputs(char *_inputFile, char *_fuelFile)
+{
 	if(m_pFarsite)
-		return m_pFarsite->LoadInputsFile(_inputFile);
+		return m_pFarsite->LoadInputsFile(_inputFile, _fuelFile);
 	return 0;
 }
 

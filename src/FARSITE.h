@@ -25,6 +25,7 @@ public:
 	int GetNumIgnitionCells();
 
 	int LoadFarsiteInputs(char *_inputFile);
+	int LoadFarsiteInputs(char *_inputFile, char *_fuelFile);
 	char *CommandFileError(int i_ErrNum);
 	char *GetErrorMessage(int errNum);
 

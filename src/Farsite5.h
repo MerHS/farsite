@@ -546,6 +546,7 @@ float  computeSurfPropForCell ( int i_Type, double canopyHeight,
 	void 	ReadHeader();
 	bool LoadLandscapeFile(char *FileName);
 	int LoadInputsFile(char *FileName);
+	int LoadInputsFile(char *FileName, char *FuelFileName);
 	char  *LoadInputError (int i_Num);
 	void CloseLandFile();
 	celldata 	CellData(double east, double north, celldata &cell, crowndata &cfuel, grounddata &gfuel, long *posit);

@@ -1948,8 +1948,11 @@ void Farsite5::SetAllMoistures(int _fm1, int _fm10, int _fm100,
 	}
 }
 
+int Farsite5::LoadInputsFile(char *FileName) {
+	return LoadInputsFile(FileName, nullptr);
+}
 
-int Farsite5::LoadInputsFile(char *FileName)
+int Farsite5::LoadInputsFile(char *FileName, char *FuelFileName)
 {
 int i;
 
@@ -1969,6 +1972,10 @@ int i;
    i = CheckCustomFuelsCoverage();
    if(i != 1)
 	   return i;
+
+   if (FuelFileName != nullptr) {
+	   SetFuelFileName(FuelFileName);
+   }
 
    SetStartMonth (icf.i_FarsiteStartMth);      /* Farsite simulation start date */
    SetStartDay   (icf.i_FarsiteStartDay);

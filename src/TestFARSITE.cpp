@@ -936,15 +936,11 @@ int linuxMain(int argc, char* argv[])
 				//_getch();
 				continue;
 			}
-			if(strlen(fuels[f]) > 2) {
-				printf("Loading fuel adjustment file for Farsite #%d: %s\n", f + 1, fuels[f]);
-				pFarsites[f]->SetFuels(fuels[f]);
-			}
 		}
 		if(!cancelRequest)
 		{
 			printf("Loading inputs file for Farsite #%d: %s\n", f + 1, inputs[f]);
-			ret = pFarsites[f]->LoadFarsiteInputs(inputs[f]);
+			ret = pFarsites[f]->LoadFarsiteInputs(inputs[f], fuels[f]);
 			if ( ret != 1 )
 			{
 			   char *a = pFarsites[f]->CommandFileError(ret);
